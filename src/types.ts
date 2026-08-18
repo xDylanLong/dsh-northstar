@@ -1,4 +1,4 @@
-import type { SmartEvaluation, TaskMatchEvaluation } from './core/evaluate.ts'
+import type { NorthstarEvaluation, TaskMatchEvaluation } from './core/evaluate.ts'
 
 export interface NorthstarSettings {
   readonly enabled: boolean
@@ -7,7 +7,7 @@ export interface NorthstarSettings {
 
 export interface NorthstarState {
   readonly settings: NorthstarSettings
-  readonly smart: SmartEvaluation
+  readonly evaluation: NorthstarEvaluation
   readonly lastCheck?: {
     readonly task: string
     readonly match: TaskMatchEvaluation

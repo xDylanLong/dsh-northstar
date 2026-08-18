@@ -4,7 +4,7 @@ import type { PreStepDecision } from '@deepseek-ai/dsh-agent'
 import { createUserMessage } from '@deepseek-ai/dsh-llm'
 import { settingsNamespace, type SettingsScope } from '@deepseek-ai/dsh-settings'
 import z from '@deepseek-ai/schemastery'
-import { evaluateSmart, evaluateTaskMatch, type TaskMatchEvaluation } from './core/evaluate.ts'
+import { evaluateNorthstar, evaluateTaskMatch, type TaskMatchEvaluation } from './core/evaluate.ts'
 import type { NorthstarSettings, NorthstarState } from './types.ts'
 import { TYPERT_REMOTE } from './remote.ts'
 
@@ -24,9 +24,9 @@ function messageText(message: { content: readonly { type?: string; text?: string
     .trim()
 }
 
-function checkNotice(statement: string, task: string, smart: ReturnType<typeof evaluateSmart>, match: TaskMatchEvaluation): string {
-  if (smart.status === 'red') {
-    return `北极星指标门禁：当前指标不满足 SMART（${smart.summary}）。不要直接执行用户任务；先说明指标需要补充哪些具体、可衡量或有时限的信息，再请用户完善北极星指标。当前指标：${statement}`
+function checkNotice(statement: string, task: string, evaluation: ReturnType<typeof evaluateNorthstar>, match: TaskMatchEvaluation): string {
+  if (evaluation.status === 'red' || evaluation.status === 'orange') {
+    return `北极星指标评分：${evaluation.score}/100（${evaluation.summary}）。先提醒用户当前指标仍需补强，再结合用户任务给出建议；不要把评分不足误当成已对齐目标。当前指标：${statement}`
   }
   if (match.status === 'red') {
     return `北极星指标门禁：当前任务与北极星指标没有明确关联（${match.summary}）。不要把它当作已对齐任务执行；请先指出偏离，并询问用户是否要修改任务或更新北极星指标。北极星指标：${statement}；当前任务：${task}`
@@ -56,13 +56,13 @@ export class NorthstarGateway extends TypertRemoteService {
         .join('\n')
       if (task === '') return next()
       signal.throwIfAborted()
-      const smart = evaluateSmart(settings.statement)
+      const evaluation = evaluateNorthstar(settings.statement)
       const match = evaluateTaskMatch(settings.statement, task)
       this.lastCheck = { task, match, checkedAt: Date.now() }
       const downstream = await next()
       if (downstream.kind !== 'enter') return downstream
       const guard = createUserMessage({
-        content: [{ type: 'text', text: checkNotice(settings.statement, task, smart, match) }],
+        content: [{ type: 'text', text: checkNotice(settings.statement, task, evaluation, match) }],
         source: { kind: 'plugin', plugin: 'dsh-northstar', form: 'notice', summary: `north-star ${match.status}` },
       })
       return { kind: 'enter', messages: [...downstream.messages, guard] }
@@ -96,7 +96,7 @@ export class NorthstarGateway extends TypertRemoteService {
     const settings = this.readSettings()
     return {
       settings,
-      smart: evaluateSmart(settings.statement),
+      evaluation: evaluateNorthstar(settings.statement),
       ...(this.lastCheck === undefined ? {} : { lastCheck: this.lastCheck }),
     }
   }

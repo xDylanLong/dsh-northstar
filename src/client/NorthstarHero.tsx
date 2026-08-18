@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useMemo, useState } from 'react'
-import { Button, IconSettingsOutline14, StateDot } from '@deepseek-ai/dsh-client-ui-primitives'
+import { Button, IconSettingsOutline14 } from '@deepseek-ai/dsh-client-ui-primitives'
 import type { InjectFace } from '@deepseek-ai/dsh-client-ui-slots'
-import { evaluateSmart } from '../core/evaluate.ts'
+import { evaluateNorthstar } from '../core/evaluate.ts'
 import type { NorthstarSettings, NorthstarState } from '../types.ts'
 
 export interface NorthstarHeroInjected {
@@ -11,8 +11,8 @@ export interface NorthstarHeroInjected {
 
 export type NorthstarHeroProps = InjectFace<NorthstarHeroInjected>
 
-function dotState(status: NorthstarState['smart']['status']): 'done' | 'warning' | 'error' {
-  return status === 'green' ? 'done' : status === 'yellow' ? 'warning' : 'error'
+function ScoreDot({ status }: { status: NorthstarState['evaluation']['status'] }) {
+  return <span className={`dsh-northstar-status-dot dsh-northstar-${status}`} aria-hidden="true" />
 }
 
 /**
@@ -51,7 +51,7 @@ function useConversationColumnLeft(): number {
 export function NorthstarHero({ load, save }: NorthstarHeroProps) {
   const [state, setState] = useState<NorthstarState>({
     settings: { enabled: false, statement: '' },
-    smart: evaluateSmart(''),
+    evaluation: evaluateNorthstar(''),
   })
   const [draft, setDraft] = useState('')
   const [expanded, setExpanded] = useState(true)
@@ -72,8 +72,8 @@ export function NorthstarHero({ load, save }: NorthstarHeroProps) {
     return () => { alive = false }
   }, [load])
 
-  const preview = useMemo(() => evaluateSmart(draft), [draft])
-  const visibleState = draft === state.settings.statement ? state.smart : preview
+  const preview = useMemo(() => evaluateNorthstar(draft), [draft])
+  const visibleEvaluation = draft === state.settings.statement ? state.evaluation : preview
 
   const persist = (next: NorthstarSettings): void => {
     setBusy(true)
@@ -102,7 +102,7 @@ export function NorthstarHero({ load, save }: NorthstarHeroProps) {
           role="switch"
           aria-checked={state.settings.enabled}
           aria-label="开启北极星指标检查"
-          className={`dsh-northstar-switch dsh-northstar-${visibleState.status}`}
+          className={`dsh-northstar-switch dsh-northstar-${visibleEvaluation.status}`}
           data-enabled={state.settings.enabled}
           disabled={busy}
           onClick={toggle}
@@ -110,7 +110,7 @@ export function NorthstarHero({ load, save }: NorthstarHeroProps) {
           <span className="dsh-northstar-switch-track" aria-hidden="true">
             <span className="dsh-northstar-switch-knob" />
           </span>
-          <StateDot state={dotState(visibleState.status)} size={8} />
+          <ScoreDot status={visibleEvaluation.status} />
           <span>北极星</span>
         </button>
         <Button
@@ -142,8 +142,8 @@ export function NorthstarHero({ load, save }: NorthstarHeroProps) {
           />
           <div className="dsh-northstar-editor-footer">
             <span className="dsh-northstar-status">
-              <StateDot state={dotState(visibleState.status)} size={8} />
-              SMART {visibleState.score}/5 · {visibleState.summary}
+              <ScoreDot status={visibleEvaluation.status} />
+              评分 {visibleEvaluation.score}/100 · {visibleEvaluation.summary}
             </span>
             <Button variant="primary" size="sm" disabled={busy || draft === state.settings.statement} onClick={saveDraft}>
               保存

@@ -27,7 +27,7 @@ describe('NorthstarGateway', () => {
 
     expect(decision.kind).toBe('enter')
     expect(decision.messages).toHaveLength(2)
-    expect(decision.messages[1]?.content[0]).toMatchObject({ type: 'text', text: expect.stringContaining('北极星指标检查') })
+    expect(decision.messages[1]?.content[0]).toMatchObject({ type: 'text', text: expect.stringContaining('北极星指标评分') })
     await fiber.dispose()
   })
 })
