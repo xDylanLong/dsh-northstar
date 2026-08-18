@@ -1,0 +1,15 @@
+node_modules/
+node_modules.failed/
+node_modules.failed
+node_modules.harness/
+node_modules.harness
+tsconfig.local.json
+lib/
+coverage/
+dist/
+tmp/
+*.tsbuildinfo
+*.tgz
+.DS_Store
+.dev/
+.pnpm-store/
