@@ -13,3 +13,6 @@ tmp/
 .DS_Store
 .dev/
 .pnpm-store/
+.playwright-cli/
+output/
+3080-northstar.png

@@ -13,7 +13,7 @@
 - 指标保存在 Harness 的本地 `settings.yaml`，命名空间为 `northstar`，不上传云端。
 - 任务检查发生在模型请求前。红色指标或无关任务会收到明确的“先修正指标/任务”上下文，避免模型直接执行偏离目标的工作。
 
-首页使用 DSH 已有的 `conversation.hero.agentPreset` chip 席位，并通过更低的 slot priority 进入，因此在同时启用内置 Agent Preset 时会替换那个 chip；这是为了保留首页只有一个自然入口，未改动 DSH 的 DOM 或视觉 token。
+首页入口使用 DSH 官方的 `shell.overlay` additive slot，定位在主内容区顶部左侧，随侧边栏展开、收起和拖拽自适应，不替换内置 Agent Preset，也不改动 DSH 的 DOM 或视觉 token。配置面板从入口下方展开，并在窄屏下限制宽度。
 
 ## 判断方式
 

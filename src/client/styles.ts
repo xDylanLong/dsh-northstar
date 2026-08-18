@@ -1,6 +1,6 @@
 /** Small layout-only additions; colors and typography come from DSH tokens. */
 export const NORTHSTAR_STYLES = `
-.dsh-northstar-control { position: relative; display: inline-flex; flex-direction: column; align-items: flex-start; min-width: 0; }
+.dsh-northstar-control { position: absolute; top: 16px; left: 16px; z-index: 1; display: inline-flex; flex-direction: column; align-items: flex-start; min-width: 0; }
 .dsh-northstar-toolbar { display: inline-flex; align-items: center; gap: 2px; min-height: 28px; }
 .dsh-northstar-switch { display: inline-flex; align-items: center; gap: 5px; height: 28px; padding: 0 9px; border: 1px solid var(--dsw-alias-border-l2); border-radius: 14px; color: var(--dsw-alias-label-primary); background: var(--dsw-alias-bg-layer-1); cursor: pointer; font: inherit; font-size: 12px; line-height: 18px; }
 .dsh-northstar-switch:hover:not(:disabled) { background: var(--dsw-alias-interactive-bg-hover); }

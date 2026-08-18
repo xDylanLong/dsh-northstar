@@ -2,12 +2,14 @@ import type { ClientContext } from '@deepseek-ai/dsh-client-runtime/client'
 import type {} from '@deepseek-ai/dsh-api-remotes/client'
 import type {} from '@deepseek-ai/dsh-client-ui-slots'
 import type {} from '@deepseek-ai/dsh-client-ui-conversation/client'
+import type {} from '@deepseek-ai/dsh-client-ui-layout/client'
 import { TYPERT_REMOTE } from '../remote.ts'
 import type { NorthstarSettings, NorthstarState } from '../types.ts'
 import { NorthstarHero, type NorthstarHeroInjected } from './NorthstarHero.tsx'
 import { NORTHSTAR_STYLES } from './styles.ts'
 
 export const inject = ['slots', 'remote']
+export const NORTHSTAR_SLOT_NAME = 'shell.overlay'
 
 const STYLE_SELECTOR = 'style[data-dsh-northstar]'
 
@@ -35,10 +37,11 @@ export async function apply(ctx: ClientContext): Promise<() => Promise<void>> {
     return result.value
   }
 
-  ctx.slots.inject('conversation.hero.agentPreset', () => ctx.slots.register(
+  ctx.slots.inject(NORTHSTAR_SLOT_NAME, () => ctx.slots.register(
     {
-      name: 'conversation.hero.agentPreset',
-      priority: -20,
+      name: NORTHSTAR_SLOT_NAME,
+      id: 'dsh-northstar',
+      order: -100,
       inject: () => ({ load, save }),
     },
     NorthstarHero,
