@@ -7,4 +7,10 @@ describe('northstar client placement', () => {
     expect(NORTHSTAR_SLOT_NAME).toBe('shell.overlay')
     expect(NORTHSTAR_STYLES).toContain('.dsh-northstar-control { position: absolute;')
   })
+
+  it('renders a compact card with a dedicated switch track and config action', () => {
+    expect(NORTHSTAR_STYLES).toContain('.dsh-northstar-card {')
+    expect(NORTHSTAR_STYLES).toContain('.dsh-northstar-switch-track {')
+    expect(NORTHSTAR_STYLES).toContain('.dsh-northstar-config-button {')
+  })
 })

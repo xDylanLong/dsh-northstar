@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useMemo, useState } from 'react'
-import { Button, StateDot } from '@deepseek-ai/dsh-client-ui-primitives'
+import { Button, IconSettingsOutline14, StateDot } from '@deepseek-ai/dsh-client-ui-primitives'
 import type { InjectFace } from '@deepseek-ai/dsh-client-ui-slots'
 import { evaluateSmart } from '../core/evaluate.ts'
 import type { NorthstarSettings, NorthstarState } from '../types.ts'
@@ -96,7 +96,7 @@ export function NorthstarHero({ load, save }: NorthstarHeroProps) {
 
   return (
     <div className="dsh-northstar-control" style={{ left: conversationColumnLeft }}>
-      <div className="dsh-northstar-toolbar">
+      <div className="dsh-northstar-card">
         <button
           type="button"
           role="switch"
@@ -107,13 +107,22 @@ export function NorthstarHero({ load, save }: NorthstarHeroProps) {
           disabled={busy}
           onClick={toggle}
         >
-          <span className="dsh-northstar-switch-knob" />
+          <span className="dsh-northstar-switch-track" aria-hidden="true">
+            <span className="dsh-northstar-switch-knob" />
+          </span>
           <StateDot state={dotState(visibleState.status)} size={8} />
           <span>北极星</span>
         </button>
-        <Button variant="ghost" size="sm" disabled={busy} onClick={() => { setExpanded(open => !open) }}>
-          配置
-        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="dsh-northstar-config-button"
+          aria-label="配置北极星指标"
+          title="配置北极星指标"
+          disabled={busy}
+          icon={<IconSettingsOutline14 size={14} />}
+          onClick={() => { setExpanded(open => !open) }}
+        />
       </div>
       {expanded && (
         <div className="dsh-northstar-editor">
