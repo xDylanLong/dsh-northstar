@@ -7,9 +7,12 @@ import type { NorthstarSettings, NorthstarState } from '../types.ts'
 export interface NorthstarHeroInjected {
   readonly load: () => Promise<NorthstarState>
   readonly save: (settings: NorthstarSettings) => Promise<NorthstarState>
+  readonly evaluate: (statement: string) => Promise<NorthstarState>
 }
 
 export type NorthstarHeroProps = InjectFace<NorthstarHeroInjected>
+
+export const NORTHSTAR_HIGH_SCORE_EXAMPLE = '获取 1,000 名目标 DSH 用户安装并使用 dsh-northstar。'
 
 function ScoreDot({ status }: { status: NorthstarState['evaluation']['status'] }) {
   return <span className={`dsh-northstar-status-dot dsh-northstar-${status}`} aria-hidden="true" />
@@ -48,7 +51,7 @@ function useConversationColumnLeft(): number {
 }
 
 /** Minimal frame-scoped control: status-colored switch, config button, inline editor. */
-export function NorthstarHero({ load, save }: NorthstarHeroProps) {
+export function NorthstarHero({ load, save, evaluate }: NorthstarHeroProps) {
   const [state, setState] = useState<NorthstarState>({
     settings: { enabled: false, statement: '' },
     evaluation: evaluateNorthstar(''),
@@ -92,6 +95,22 @@ export function NorthstarHero({ load, save }: NorthstarHeroProps) {
 
   const saveDraft = (): void => {
     if (draft !== state.settings.statement) persist({ enabled: state.settings.enabled, statement: draft })
+  }
+
+  const evaluateDraft = (): void => {
+    const statement = draft.trim()
+    if (statement === '') {
+      setError('请先填写北极星指标，再点击评估指标')
+      return
+    }
+    setBusy(true)
+    setError(undefined)
+    void evaluate(statement).then((next) => {
+      setState(next)
+      setDraft(next.settings.statement)
+    }, (reason: unknown) => {
+      setError(reason instanceof Error ? reason.message : String(reason))
+    }).finally(() => { setBusy(false) })
   }
 
   return (
@@ -140,15 +159,33 @@ export function NorthstarHero({ load, save }: NorthstarHeroProps) {
               }
             }}
           />
+          {draft.trim() === '' && (
+            <div className="dsh-northstar-example">
+              <span>高分示例</span>
+              <button type="button" onClick={() => { setDraft(NORTHSTAR_HIGH_SCORE_EXAMPLE) }}>
+                {NORTHSTAR_HIGH_SCORE_EXAMPLE}
+              </button>
+            </div>
+          )}
           <div className="dsh-northstar-editor-footer">
             <span className="dsh-northstar-status">
               <ScoreDot status={visibleEvaluation.status} />
-              评分 {visibleEvaluation.score}/100 · {visibleEvaluation.summary}
+              {visibleEvaluation.source === 'ai'
+                ? `评分 ${visibleEvaluation.score}/100 · ${visibleEvaluation.summary}`
+                : visibleEvaluation.summary}
             </span>
-            <Button variant="primary" size="sm" disabled={busy || draft === state.settings.statement} onClick={saveDraft}>
-              保存
-            </Button>
+            <div className="dsh-northstar-editor-actions">
+              <Button variant="ghost" size="sm" disabled={busy || draft.trim() === ''} onClick={evaluateDraft}>
+                评估指标
+              </Button>
+              <Button variant="primary" size="sm" disabled={busy || draft === state.settings.statement} onClick={saveDraft}>
+                保存
+              </Button>
+            </div>
           </div>
+          {visibleEvaluation.source === 'ai' && visibleEvaluation.suggestion !== undefined && (
+            <div className="dsh-northstar-suggestion">建议：{visibleEvaluation.suggestion}</div>
+          )}
           {error !== undefined && <div className="dsh-northstar-error" role="alert">{error}</div>}
         </div>
       )}

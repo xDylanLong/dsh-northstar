@@ -16,8 +16,8 @@ export const TYPERT_REMOTE = {
       result: { mode: 'strict', typeSymbol: 'dsh-northstar#NorthstarState', schema: NorthstarStateSchema },
     },
     {
-      id: 'dsh-northstar#northstar/check', service: 'northstar', namespace: 'northstar', method: 'check', invocation: { kind: 'direct' },
-      parameters: [{ name: 'task', wire: 'task', source: 'json', codec: { mode: 'strict', typeSymbol: 'string', schema: z.string() } }],
+      id: 'dsh-northstar#northstar/evaluate', service: 'northstar', namespace: 'northstar', method: 'evaluate', invocation: { kind: 'direct' },
+      parameters: [{ name: 'statement', wire: 'statement', source: 'json', codec: { mode: 'strict', typeSymbol: 'string', schema: z.string() } }],
       result: { mode: 'strict', typeSymbol: 'dsh-northstar#NorthstarState', schema: NorthstarStateSchema },
     },
   ],
@@ -27,7 +27,7 @@ declare module '@deepseek-ai/dsh-typert-protocol' {
   interface TypertRemoteMap {
     'northstar/state': () => Promise<RemoteResult<NorthstarState>>
     'northstar/save': (settings: NorthstarSettings) => Promise<RemoteResult<NorthstarState>>
-    'northstar/check': (task: string) => Promise<RemoteResult<NorthstarState>>
+    'northstar/evaluate': (statement: string) => Promise<RemoteResult<NorthstarState>>
   }
   interface TypertRemoteNamespaceMap {
     northstar: TypertRemoteNamespace<'northstar'>

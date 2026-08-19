@@ -20,7 +20,12 @@ export const NORTHSTAR_STYLES = `
 .dsh-northstar-editor { position: absolute; top: calc(100% + 6px); left: 0; z-index: 20; width: min(360px, calc(100vw - 32px)); padding: 10px; border: 1px solid var(--dsw-alias-border-l2); border-radius: 12px; background: var(--dsw-alias-bg-layer-1); box-shadow: var(--dsw-alias-shadow-layer-2); }
 .dsh-northstar-editor textarea { display: block; box-sizing: border-box; width: 100%; resize: vertical; border: 1px solid var(--dsw-alias-border-l2); border-radius: 8px; padding: 8px 10px; color: var(--dsw-alias-label-primary); background: var(--dsw-alias-bg-base); font: inherit; font-size: 13px; line-height: 20px; outline: none; }
 .dsh-northstar-editor textarea:focus { border-color: var(--dsw-alias-border-focus); }
+.dsh-northstar-example { display: flex; align-items: flex-start; gap: 6px; margin-top: 7px; color: var(--dsw-alias-label-caption); font-size: 11px; line-height: 16px; }
+.dsh-northstar-example button { padding: 0; border: none; color: var(--dsw-alias-label-secondary); background: transparent; cursor: pointer; font: inherit; text-align: left; }
+.dsh-northstar-example button:hover { color: var(--dsw-alias-label-primary); }
 .dsh-northstar-editor-footer { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 8px; }
 .dsh-northstar-status { display: inline-flex; align-items: center; gap: 4px; min-width: 0; color: var(--dsw-alias-label-caption); font-size: 11px; line-height: 16px; }
+.dsh-northstar-editor-actions { display: inline-flex; align-items: center; gap: 4px; flex: none; }
+.dsh-northstar-suggestion { margin-top: 6px; color: var(--dsw-alias-label-secondary); font-size: 11px; line-height: 16px; }
 .dsh-northstar-error { margin-top: 6px; color: var(--dsw-alias-state-error-primary); font-size: 11px; line-height: 16px; }
 `

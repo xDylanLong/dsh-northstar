@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { evaluateNorthstar, NORTHSTAR_DIMENSIONS } from '../src/core/evaluate.ts'
+import { evaluateNorthstar, NORTHSTAR_DIMENSIONS, parseNorthstarAiEvaluation } from '../src/core/evaluate.ts'
 
 describe('evaluateNorthstar', () => {
   it('scores the six dimensions in the requested priority order', () => {
@@ -9,19 +9,29 @@ describe('evaluateNorthstar', () => {
     expect(NORTHSTAR_DIMENSIONS.map(dimension => dimension.weight)).toEqual([6, 5, 4, 3, 2, 1])
   })
 
-  it('gives a strong outcome-oriented statement a high score', () => {
-    const result = evaluateNorthstar('在 2026 年 Q4 前，通过提升新用户完成关键任务的比例到 80%，降低获客成本 20%，打造比竞品更快的体验。')
-    expect(result.status).toBe('green')
-    expect(result.score).toBeGreaterThanOrEqual(80)
-    expect(result.dimensions.userValue).toBeGreaterThan(0)
-    expect(result.dimensions.coreBehavior).toBeGreaterThan(0)
-    expect(result.dimensions.businessRelevance).toBeGreaterThan(0)
-    expect(result.dimensions.measurability).toBeGreaterThan(0)
+  it('does not derive a score from the statement before an explicit AI evaluation', () => {
+    expect(evaluateNorthstar('获取 1,000 名目标 DSH 用户安装并使用 dsh-northstar')).toMatchObject({
+      status: 'gray',
+      score: 0,
+      source: 'unrated',
+    })
+    expect(evaluateNorthstar('').status).toBe('gray')
   })
 
-  it('keeps vague statements scoreable without blocking the switch', () => {
-    expect(evaluateNorthstar('让插件更好用')).toMatchObject({ status: 'orange' })
-    expect(evaluateNorthstar('').status).toBe('gray')
-    expect(evaluateNorthstar('梦想').status).toBe('red')
+  it('normalizes the AI score from the prioritized dimension scores', () => {
+    const result = parseNorthstarAiEvaluation(JSON.stringify({
+      score: 1,
+      dimensions: {
+        userValue: 5,
+        coreBehavior: 4,
+        businessRelevance: 3,
+        leadingness: 2,
+        controllability: 1,
+        measurability: 0,
+      },
+      summary: '维度评分可用。',
+    }), 123)
+    expect(result.score).toBe(67)
+    expect(result.evaluatedAt).toBe(123)
   })
 })

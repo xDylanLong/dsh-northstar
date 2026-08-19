@@ -36,13 +36,18 @@ export async function apply(ctx: ClientContext): Promise<() => Promise<void>> {
     if (!result.ok) throw new Error(`${result.error.code}: ${result.error.message}`)
     return result.value
   }
+  const evaluate: NorthstarHeroInjected['evaluate'] = async (statement: string): Promise<NorthstarState> => {
+    const result = await northstar.evaluate(statement)
+    if (!result.ok) throw new Error(`${result.error.code}: ${result.error.message}`)
+    return result.value
+  }
 
   ctx.slots.inject(NORTHSTAR_SLOT_NAME, () => ctx.slots.register(
     {
       name: NORTHSTAR_SLOT_NAME,
       id: 'dsh-northstar',
       order: -100,
-      inject: () => ({ load, save }),
+      inject: () => ({ load, save, evaluate }),
     },
     NorthstarHero,
   ))

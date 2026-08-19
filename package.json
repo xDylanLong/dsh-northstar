@@ -1,7 +1,7 @@
 {
   "name": "dsh-northstar",
   "version": "0.1.0",
-  "description": "A local DeepSeek Harness north-star guard that keeps tasks aligned before they start.",
+  "description": "A local DeepSeek Harness north-star guard with explicit AI indicator evaluation and task alignment context.",
   "type": "module",
   "license": "Apache-2.0",
   "main": "lib/index.js",
@@ -36,6 +36,7 @@
   "peerDependencies": {
     "@deepseek-ai/cordis": ">=4.0.0",
     "@deepseek-ai/dsh-agent": ">=0.1.0-rc.1",
+    "@deepseek-ai/dsh-agent-default-model": ">=0.1.0-rc.1",
     "@deepseek-ai/dsh-api-remotes": ">=0.0.1-rc.1",
     "@deepseek-ai/dsh-client-locale": ">=0.0.1-rc.1",
     "@deepseek-ai/dsh-client-runtime": ">=0.0.1-rc.1",
