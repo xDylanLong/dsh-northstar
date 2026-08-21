@@ -2,6 +2,7 @@
   "name": "dsh-northstar",
   "version": "0.1.0",
   "description": "A local DeepSeek Harness north-star guard with explicit AI indicator evaluation and task alignment context.",
+  "icon": "./assets/dsh-northstar-logo.png",
   "type": "module",
   "license": "Apache-2.0",
   "main": "lib/index.js",
@@ -14,7 +15,7 @@
     "./cordis.patch.yml": "./cordis.patch.yml",
     "./package.json": "./package.json"
   },
-  "files": ["lib", "cordis.patch.yml", "README.md", "LICENSE"],
+  "files": ["lib", "assets/dsh-northstar-logo.png", "cordis.patch.yml", "README.md", "LICENSE"],
   "scripts": {
     "build": "tsdown && tsc -p tsconfig.dts.json",
     "test": "vitest run",

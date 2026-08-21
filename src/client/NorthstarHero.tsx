@@ -3,6 +3,7 @@ import { Button, IconSettingsOutline14 } from '@deepseek-ai/dsh-client-ui-primit
 import type { InjectFace } from '@deepseek-ai/dsh-client-ui-slots'
 import { evaluateNorthstar } from '../core/evaluate.ts'
 import type { NorthstarSettings, NorthstarState } from '../types.ts'
+import { NORTHSTAR_LOGO_TOOLTIP, NORTHSTAR_LOGO_URL } from './logo.ts'
 
 export interface NorthstarHeroInjected {
   readonly load: () => Promise<NorthstarState>
@@ -118,9 +119,19 @@ export function NorthstarHero({ load, save, evaluate }: NorthstarHeroProps) {
       <div className="dsh-northstar-card">
         <button
           type="button"
+          className="dsh-northstar-logo-button"
+          aria-label={NORTHSTAR_LOGO_TOOLTIP}
+          title={NORTHSTAR_LOGO_TOOLTIP}
+          disabled={busy}
+        >
+          <img src={NORTHSTAR_LOGO_URL} alt="" className="dsh-northstar-logo" />
+          <span className="dsh-northstar-logo-tooltip" role="tooltip">{NORTHSTAR_LOGO_TOOLTIP}</span>
+        </button>
+        <button
+          type="button"
           role="switch"
           aria-checked={state.settings.enabled}
-          aria-label="开启北极星指标检查"
+          aria-label={state.settings.enabled ? '关闭北极星指标检查' : '开启北极星指标检查'}
           className={`dsh-northstar-switch dsh-northstar-${visibleEvaluation.status}`}
           data-enabled={state.settings.enabled}
           disabled={busy}
@@ -130,7 +141,6 @@ export function NorthstarHero({ load, save, evaluate }: NorthstarHeroProps) {
             <span className="dsh-northstar-switch-knob" />
           </span>
           <ScoreDot status={visibleEvaluation.status} />
-          <span>北极星</span>
         </button>
         <Button
           variant="ghost"

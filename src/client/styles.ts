@@ -2,6 +2,12 @@
 export const NORTHSTAR_STYLES = `
 .dsh-northstar-control { position: absolute; top: 16px; left: 16px; z-index: 1; display: inline-flex; flex-direction: column; align-items: flex-start; min-width: 0; }
 .dsh-northstar-card { display: inline-flex; align-items: center; gap: 2px; min-height: 28px; padding: 3px; border: 1px solid var(--dsw-alias-border-l2); border-radius: 12px; background: var(--dsw-alias-bg-layer-1); box-shadow: var(--dsw-alias-shadow-layer-1); }
+.dsh-northstar-logo-button { position: relative; display: inline-flex; width: 28px; height: 28px; align-items: center; justify-content: center; padding: 0; border: none; border-radius: 8px; background: transparent; cursor: help; }
+.dsh-northstar-logo-button:hover:not(:disabled), .dsh-northstar-logo-button:focus-visible { background: var(--dsw-alias-interactive-bg-hover); }
+.dsh-northstar-logo-button:disabled { cursor: wait; opacity: .55; }
+.dsh-northstar-logo { display: block; width: 22px; height: 22px; border-radius: 6px; object-fit: cover; }
+.dsh-northstar-logo-tooltip { position: absolute; top: calc(100% + 7px); left: 50%; z-index: 30; padding: 4px 7px; border: 1px solid var(--dsw-alias-border-l2); border-radius: 6px; color: var(--dsw-alias-label-primary); background: var(--dsw-alias-bg-layer-2); box-shadow: var(--dsw-alias-shadow-layer-2); font-size: 11px; line-height: 16px; opacity: 0; pointer-events: none; transform: translate(-50%, -2px); transition: opacity .12s ease, transform .12s ease; white-space: nowrap; }
+.dsh-northstar-logo-button:hover:not(:disabled) .dsh-northstar-logo-tooltip, .dsh-northstar-logo-button:focus-visible .dsh-northstar-logo-tooltip { opacity: 1; transform: translate(-50%, 0); }
 .dsh-northstar-switch { display: inline-flex; align-items: center; gap: 5px; height: 28px; padding: 0 7px; border: none; border-radius: 8px; color: var(--dsw-alias-label-primary); background: transparent; cursor: pointer; font: inherit; font-size: 12px; line-height: 18px; }
 .dsh-northstar-switch:hover:not(:disabled) { background: var(--dsw-alias-interactive-bg-hover); }
 .dsh-northstar-switch:disabled { cursor: wait; opacity: .55; }
